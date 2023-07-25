@@ -1,0 +1,26 @@
+#!/bin/sh
+
+#########################################################################
+# Trigger a deploy build that uses "buildWithParameters".
+# Specifically, ENVIRO, PROJECT, and RELEASENAME parameters.
+#########################################################################
+
+if [ $# -ne 4 ]; then
+    echo "usage: $0 job environment project releasename"
+    echo "       $0 deploy-rgs1-ws-WAR_release-2.4.40.x ws captainmarval"
+    echo "       $0 deploy-rgs1-ws-WAR_release-2.4.40.x ws \"\""
+    echo "       $0 deploy-qa21-ws-WAR_RAIN-release qa21 ws rain_release"
+    exit 1
+fi
+
+JOB=$1
+ENV=$2
+PROJECT=$3
+RELEASENAME=$4
+
+
+URL="https://ecombuild.wsgc.com/jenkins/job/${JOB}/buildWithParameters"
+
+echo "${URL}"
+curl --silent -X POST "${URL}" \
+  --data-urlencode json="{'parameter': [{'name':'ENVIRO', 'value':'${ENV}'}, {'name':'PROJECT', 'value':'${PROJECT}'}, {'name':'RELEASENAME', 'value':'${RELEASENAME}'}]}"

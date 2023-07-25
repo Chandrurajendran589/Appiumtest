@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mvn -U -f "$(dirname "${BASH_SOURCE[0]}")"/all-svcs.xml versions:display-property-updates

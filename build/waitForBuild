@@ -1,0 +1,19 @@
+#!/bin/sh
+
+################################################################################################################################
+# Grab the build list from Jenkins and flash the screen until the specified build appears on the list.
+################################################################################################################################
+
+echo "Waiting for build to start: $1"
+
+flash () { for a in `seq 1 3`; do printf \\e[?5h; sleep 0.1; printf \\e[?5l; read -s -n1 -t1 && break; done; }
+
+while (true); do
+    getBuilds $1 | grep $1
+    if [ $? -ne 1 ]; then
+        flash
+        echo "Build has started"
+        exit 0
+    fi
+    sleep 3
+done

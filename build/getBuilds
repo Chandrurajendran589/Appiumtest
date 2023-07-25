@@ -1,0 +1,15 @@
+#!/bin/sh
+
+################################################################################################################################
+# Get a list of currently running Jenkins builds
+# If an argument is passed, only return builds with names that contain the string passed in the argument.
+################################################################################################################################
+
+
+if [ $# -ge 1 ]; then
+    URL="https://ecombuild.wsgc.com/jenkins/computer/api/xml?tree=computer\[executors\[currentExecutable\[url\]\],oneOffExecutors\[currentExecutable\[url\]\]\]&xpath=//url\[contains(text(),'$1')\]&wrapper=builds"
+else
+    URL='https://ecombuild.wsgc.com/jenkins/computer/api/xml?tree=computer\[executors\[currentExecutable\[url\]\],oneOffExecutors\[currentExecutable\[url\]\]\]&xpath=//url&wrapper=builds'
+fi
+
+curl -sk "${URL}" | xmllint --format - | sort | uniq | grep -v builds\>  | grep -v \<\?xml

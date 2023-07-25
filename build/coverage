@@ -1,0 +1,28 @@
+#!/bin/sh
+
+######################################################################
+#
+# Use Jacoco to check code coverage of unit tests.
+# If tests are successful, open the Jacoco reports in the user's
+# default browser.
+#
+# To execute a specific test class pass the -Dtest=<class_name> argument
+# Eg: coverage -Dtest=ClassName
+#
+# To execute a specific test case within a class pass the -Dtest=<class_name>#<test_case> argument
+# Eg: coverage -Dtest=ClassName#testUseCase1
+#
+######################################################################
+
+mvn -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -e org.jacoco:jacoco-maven-plugin:0.8.1:prepare-agent clean test org.jacoco:jacoco-maven-plugin:0.8.1:report $*
+
+if [ $? -ne 0 ]; then
+    RED='\033[0;31m'
+    NC='\033[0m'
+    echo "${RED}ERROR:${NC} Unit tests failed."
+    exit 1
+fi
+
+open `find . -name index.html | grep 'jacoco/index.html'`
+
+exit 0

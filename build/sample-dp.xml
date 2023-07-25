@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.wsgc.ecommerce</groupId>
+  <artifactId>wsgc-svc</artifactId>
+  <version>1</version>
+  <packaging>pom</packaging>
+
+  <name>wsgc-svc</name>
+  <description>Build all layers</description>
+
+  <modules>
+    <module>dp-foundation</module>
+    <module>ecom-svc-account</module>
+    <module>ecom-svc-address</module>
+    <module>ecom-svc-associate-order</module>
+    <module>ecom-svc-banner</module>
+    <module>ecom-svc-business-sales</module>
+    <module>ecom-svc-cart</module>
+    <module>ecom-svc-catalog</module>
+    <module>ecom-svc-checkout</module>
+    <module>ecom-svc-content</module>
+    <module>ecom-svc-credit-card</module>
+    <module>ecom-svc-customer-service</module>
+    <module>ecom-svc-dp-delivery</module>
+    <module>ecom-svc-experimentation</module>
+    <module>ecom-svc-infrastructure</module>
+    <module>ecom-svc-installation</module>
+    <module>ecom-svc-international-checkout</module>
+    <module>ecom-svc-loyalty</module>
+    <module>ecom-svc-parent</module>
+    <module>ecom-svc-product-selection</module>
+    <module>ecom-svc-registry</module>
+    <module>ecom-svc-search</module>
+    <module>ecom-svc-shop</module>
+    <module>ecom-svc-store</module>
+    <module>ecom-svc-support</module>
+    <module>dp-baselogic</module>
+    <module>dp-sites</module>
+  </modules>
+</project>

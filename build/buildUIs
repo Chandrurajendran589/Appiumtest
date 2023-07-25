@@ -1,0 +1,9 @@
+#!/bin/sh
+
+REPO=$1
+
+for brand in ws pb we pk pt mg; do
+    cd ${REPO}/sites/${brand}/content
+    buildUI
+done
+exit 0

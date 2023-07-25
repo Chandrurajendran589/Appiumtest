@@ -1,0 +1,50 @@
+#!/bin/sh
+//usr/bin/env -P "/usr/local/bin" groovy "$0" $@; exit $?
+
+/**
+ * Groovy script to clear a cache.
+ *
+ * IMPORTANT: Requires getHost and getCacheNames to be on your PATH.
+ */
+import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
+
+import javax.management.ObjectName
+import javax.management.remote.JMXConnectorFactory as JmxFactory
+import javax.management.remote.JMXServiceURL as JmxUrl
+import javax.management.RuntimeMBeanException
+
+if (args.length != 3) {
+    println 'usage: brand environment cacheNamePrefix'
+    println '    Valid environments: ' + "getHost".execute().in.text
+    System.exit 1
+}
+
+def brand = args[0]
+def environment = args[1]
+def cachePrefix = args[2]
+
+def host = "getHost ${brand} ${environment}".execute().in.text
+def jmxPort = 39667
+def settingGroup
+def settingName
+
+if (host.startsWith('Error:')) {
+    println host
+    System.exit 1
+}
+
+def cacheNames = "getCacheNames ${brand} ${environment}".execute().in.text.tokenize()
+def serverUrl = 'service:jmx:rmi:///jndi/rmi://' + host + ':' + jmxPort + '/jmxrmi'
+def server = JmxFactory.connect(new JmxUrl(serverUrl)).MBeanServerConnection
+
+cacheNames.each { cacheName ->
+    if (cacheName.startsWith(cachePrefix)) {
+        // Use JMX to pull the Catalina/Tomcat Environment
+        def query = new ObjectName('com.wsgc.ecommerce.' + brand + ':type=Cache,name=' + cacheName)
+        //def beans = server.queryMBeans(query,null)
+
+        println 'Flushing cache: ' + cacheName
+        server.invoke(query, 'removeAll', null, null)
+    }
+}

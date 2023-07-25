@@ -1,0 +1,47 @@
+#!/bin/sh
+//usr/bin/env -P "/usr/local/bin" groovy "$0" $@; exit $?
+
+/**
+ * Groovy script to pull the names of all of the eCommerce platform caches.
+ *
+ * IMPORTANT: requires getHost to be on the PATH
+ */
+import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
+
+import javax.management.ObjectName
+import javax.management.remote.JMXConnectorFactory as JmxFactory
+import javax.management.remote.JMXServiceURL as JmxUrl
+import javax.management.RuntimeMBeanException
+
+if (args.length != 2) {
+    println 'usage: brand environment'
+    println '    Valid environments: ' + "getHost".execute().in.text
+    System.exit 1
+}
+
+def brand = args[0]
+def environment = args[1]
+
+def host = "getHost ${brand} ${environment}".execute().in.text
+def jmxPort = 39667
+def settingGroup
+def settingName
+
+if (host.startsWith('Error:')) {
+    println host
+    System.exit 1
+}
+
+def serverUrl = 'service:jmx:rmi:///jndi/rmi://' + host + ':' + jmxPort + '/jmxrmi'
+def server = JmxFactory.connect(new JmxUrl(serverUrl)).MBeanServerConnection
+
+// Use JMX to pull the Catalina/Tomcat Environment
+def query = new ObjectName('com.wsgc.ecommerce.' + brand + ':type=CacheManager,name=cacheManager')
+def beans = server.queryMBeans(query,null)
+
+def cacheNames = server.getAttribute(beans[0].getObjectName(), 'CacheNames')
+
+cacheNames.sort(false).each { name ->
+    println name
+}

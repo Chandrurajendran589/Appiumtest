@@ -1,0 +1,24 @@
+#!/bin/sh
+
+####################################################################################################
+# esipage
+#
+#   A shell script that curls the a DP URL with the "ekey=1" URL parameter to retrive a page's 
+#   embedded ESI script.
+#
+####################################################################################################
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 URL"
+    echo "       $0 https://localhost:8466/promotion/leather-sunday-golf-shoe-bag/eligiblePromotions.json"
+    exit 1
+fi
+
+verifyAkamaiCreds
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+QA_USER_PASSWORD=`cat ~/.akamai-creds | base64 -D`
+
+curl -i -k --user ${QA_USER_PASSWORD} -H "Accept-ESI:1.0" `echo $1?ekey=1 | sed -E "s/(\?.+)\?ekey/\1\&ekey/g"`

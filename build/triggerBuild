@@ -1,0 +1,24 @@
+#!/bin/sh
+
+################################################################################################################################
+# Build a branch from a repo from an organization/repository/branch.
+################################################################################################################################
+
+
+if [ $# -ne 3 ]; then
+    echo "usage: $0 organization repository branch"
+    echo "       $0 eCommerce-Rainier dp-baselogic release"
+    echo "       $0 eCommerce-Bedrock dp-sites release"
+    echo "       $0 eCommerce-Rainier pricing-service RAIN-123"
+    exit 1
+fi
+
+ORG=$1
+REPO=$2
+BRANCH=$3
+
+
+URL="https://ecombuild.wsgc.com/jenkins/job/${ORG}/job/${REPO}/job/${BRANCH}/build?delay=0sec"
+
+echo "$URL"
+curl --silent -X POST "${URL}"

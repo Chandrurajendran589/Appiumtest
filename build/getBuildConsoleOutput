@@ -1,0 +1,36 @@
+#!/bin/sh
+
+################################################################################################################################
+# Get Jenkins console output for a build.
+################################################################################################################################
+
+if [ $# -eq 1 ]; then
+    URL="https://ecombuild.wsgc.com/jenkins/job/$1/lastBuild/consoleText"
+elif [ $# -eq 2 ]; then
+    URL="https://ecombuild.wsgc.com/jenkins/job/$1/$2/consoleText"
+elif [ $# -gt 2 ]; then
+  ORG=$1
+  REPO=$2
+  BRANCH=$3
+  if [ $# -gt 3 ]; then
+    BUILD_NUM=$4
+  else
+    BUILD_NUM=lastBuild
+  fi
+  URL="https://ecombuild.wsgc.com/jenkins/job/${ORG}/job/${REPO}/job/${BRANCH}/${BUILD_NUM}/consoleText"
+else
+    echo "usage: $0 organization repository branch [buildNumber]"
+    echo "usage: $0 job [buildNumber]"
+    echo "       $0 eCommerce-Rainier dp-baselogic release"
+    echo "       $0 eCommerce-Rainier dp-baselogic release 10"
+    echo "       $0 eCommerce-Bedrock dp-sites release"
+    echo "       $0 eCommerce-Rainier pricing-service RAIN-123"
+    echo "       $0 deploy-qa21-ws-CONTENT_rainier-wrk-191002"
+    echo "       $0 deploy-qa21-ws-CONTENT_rainier-wrk-191002 123"
+    exit 1
+fi
+
+
+
+echo "$URL"
+curl --silent -X GET "${URL}"
